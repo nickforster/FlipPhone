@@ -19,4 +19,8 @@ class Stats extends ChangeNotifier {
     return flipZ;
   }
 
+  int getTotalFlips() {
+    return flipX + flipY + flipZ;
+  }
+
 }

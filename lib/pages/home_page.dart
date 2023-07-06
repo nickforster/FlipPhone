@@ -9,6 +9,8 @@ import 'package:vibration/vibration.dart';
 import '../model/stats.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return HomePageState();
@@ -19,6 +21,11 @@ class HomePageState extends State<HomePage> {
   GyroscopeEvent? latestGyroscopeEvent;
   UserAccelerometerEvent? latestAccelerometerEvent;
   bool isDelayActive = false;
+  bool landed = false;
+  int count = 0;
+  double radX = 0;
+  double radY = 0;
+  double radZ = 0;
 
   @override
   void initState() {
@@ -76,20 +83,10 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> phoneThrown() async {
-    if (isDelayActive) {
-      return; // Ignore if delay is active
-    }
-    isDelayActive = true;
-
     var stats = Provider.of<Stats>(context, listen: false);
-    var landed = false;
-
-    Stopwatch stopwatch = Stopwatch();
-    stopwatch.start();
-    var count = 0;
-    double radX = 0;
-    double radY = 0;
-    double radZ = 0;
+    if (isDelayActive) return;
+    isDelayActive = true;
+    Stopwatch().start();
 
     while (!landed) {
       await Future.delayed(const Duration(milliseconds: 10));
@@ -101,24 +98,20 @@ class HomePageState extends State<HomePage> {
       }
 
       landed = checkLanded(count);
-
       count++;
     }
     isDelayActive = true;
 
-    stopwatch.stop();
-    double elapsedSeconds = stopwatch.elapsedMilliseconds / 1000;
+    Stopwatch().stop();
+    double elapsedSeconds = Stopwatch().elapsedMilliseconds / 1000;
     stats.flipX = (radX * elapsedSeconds / (count * pi * 2)).round();
     stats.flipY = (radY * elapsedSeconds / (count * pi * 2)).round();
     stats.flipZ = (radZ * elapsedSeconds / (count * pi * 2)).round();
 
-    Vibration.vibrate(duration: 500 * (stats.flipX + stats.flipY + stats.flipZ));
-
+    Vibration.vibrate(duration: 500 * stats.getTotalFlips());
     setState(() {});
 
-    Timer(const Duration(seconds: 3), () {
-      isDelayActive = false;
-    });
+    Timer(const Duration(seconds: 3), () {isDelayActive = false;});
   }
 
   bool checkLanded(int count) {
