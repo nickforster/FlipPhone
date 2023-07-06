@@ -45,7 +45,7 @@ class HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Touch the screen and flip the phone!"),
+        title: const Text("Touch the screen & flip the phone! 🚀"),
         backgroundColor: Colors.indigoAccent,
       ),
       body: GestureDetector(
