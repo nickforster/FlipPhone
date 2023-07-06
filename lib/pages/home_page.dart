@@ -107,6 +107,21 @@ class HomePageState extends State<HomePage> {
   }
 
   bool checkLanded(int count) {
+    if (count > 100) {
+      if (latestGyroscopeEvent != null &&
+          latestGyroscopeEvent!.x.abs() +
+                  latestGyroscopeEvent!.y.abs() +
+                  latestGyroscopeEvent!.z.abs() <=
+              1) {
+        if (latestAccelerometerEvent != null &&
+            roundDouble(latestAccelerometerEvent!.x, 1) +
+                    roundDouble(latestAccelerometerEvent!.y, 1) +
+                    roundDouble(latestAccelerometerEvent!.z, 1) ==
+                0) {
+          return true;
+        }
+      }
+    }
     return false;
   }
 
