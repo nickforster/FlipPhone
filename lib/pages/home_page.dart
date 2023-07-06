@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 
 import '../model/stats.dart';
 
@@ -11,9 +12,19 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  GyroscopeEvent? latestGyroscopeEvent;
+  UserAccelerometerEvent? latestAccelerometerEvent;
+
   @override
   void initState() {
     super.initState();
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      latestGyroscopeEvent = event;
+    });
+
+    userAccelerometerEvents.listen((UserAccelerometerEvent event) {
+      latestAccelerometerEvent = event;
+    });
   }
 
   @override
