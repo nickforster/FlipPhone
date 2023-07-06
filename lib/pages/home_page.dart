@@ -111,7 +111,7 @@ class HomePageState extends State<HomePage> {
     Vibration.vibrate(duration: 500 * stats.getTotalFlips());
     setState(() {});
 
-    Timer(const Duration(seconds: 3), () {isDelayActive = false;});
+    Timer(const Duration(seconds: 3), () { isDelayActive = false; });
   }
 
   bool checkLanded(int count) {
