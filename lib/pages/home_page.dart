@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -70,5 +72,45 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void phoneThrown() {}
+  Future<void> phoneThrown() async {
+    var stats = Provider.of<Stats>(context, listen: false);
+    var landed = false;
+
+    Stopwatch stopwatch = Stopwatch();
+    stopwatch.start();
+    var count = 0;
+    double radX = 0;
+    double radY = 0;
+    double radZ = 0;
+
+    while (!landed) {
+      await Future.delayed(const Duration(milliseconds: 10));
+
+      if (latestGyroscopeEvent != null) {
+        radX += roundDouble(latestGyroscopeEvent!.x, 3).abs();
+        radY += roundDouble(latestGyroscopeEvent!.y, 3).abs();
+        radZ += roundDouble(latestGyroscopeEvent!.z, 3).abs();
+      }
+
+      landed = checkLanded(count);
+
+      count++;
+    }
+
+    stopwatch.stop();
+    double elapsedSeconds = stopwatch.elapsedMilliseconds / 1000;
+    stats.flipX = (radX * elapsedSeconds / (count * pi * 2)).round();
+    stats.flipY = (radY * elapsedSeconds / (count * pi * 2)).round();
+    stats.flipZ = (radZ * elapsedSeconds / (count * pi * 2)).round();
+
+    setState(() {});
+  }
+
+  bool checkLanded(int count) {
+    return false;
+  }
+
+  double roundDouble(double value, int places) {
+    return 0;
+  }
 }
