@@ -33,9 +33,24 @@ class HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Phone flips X: ${stats.getFlipX()}"),
-                Text("Phone flips Y: ${stats.getFlipY()}"),
-                Text("Phone flips Z: ${stats.getFlipZ()}"),
+                Text(
+                  "Phone flips X: ${stats.getFlipX()}",
+                  style: const TextStyle(
+                    fontSize: 32,
+                  ),
+                ),
+                Text(
+                  "Phone flips Y: ${stats.getFlipY()}",
+                  style: const TextStyle(
+                    fontSize: 32,
+                  ),
+                ),
+                Text(
+                  "Phone flips Z: ${stats.getFlipZ()}",
+                  style: const TextStyle(
+                    fontSize: 32,
+                  ),
+                ),
               ],
             ),
           ),
