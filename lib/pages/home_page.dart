@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:vibration/vibration.dart';
 
 import '../model/stats.dart';
 
@@ -102,6 +103,8 @@ class HomePageState extends State<HomePage> {
     stats.flipX = (radX * elapsedSeconds / (count * pi * 2)).round();
     stats.flipY = (radY * elapsedSeconds / (count * pi * 2)).round();
     stats.flipZ = (radZ * elapsedSeconds / (count * pi * 2)).round();
+
+    Vibration.vibrate(duration: 500 * (stats.flipX + stats.flipY + stats.flipZ));
 
     setState(() {});
   }
