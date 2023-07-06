@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   GyroscopeEvent? latestGyroscopeEvent;
   UserAccelerometerEvent? latestAccelerometerEvent;
+  bool isDelayActive = false;
 
   @override
   void initState() {
@@ -74,6 +76,11 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> phoneThrown() async {
+    if (isDelayActive) {
+      return; // Ignore if delay is active
+    }
+    isDelayActive = true;
+
     var stats = Provider.of<Stats>(context, listen: false);
     var landed = false;
 
@@ -97,6 +104,7 @@ class HomePageState extends State<HomePage> {
 
       count++;
     }
+    isDelayActive = true;
 
     stopwatch.stop();
     double elapsedSeconds = stopwatch.elapsedMilliseconds / 1000;
@@ -107,6 +115,10 @@ class HomePageState extends State<HomePage> {
     Vibration.vibrate(duration: 500 * (stats.flipX + stats.flipY + stats.flipZ));
 
     setState(() {});
+
+    Timer(const Duration(seconds: 3), () {
+      isDelayActive = false;
+    });
   }
 
   bool checkLanded(int count) {
