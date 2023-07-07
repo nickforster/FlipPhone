@@ -23,4 +23,10 @@ class Stats extends ChangeNotifier {
     return flipX + flipY + flipZ;
   }
 
+  void resetFlips() {
+    flipX = 0;
+    flipY = 0;
+    flipZ = 0;
+  }
+
 }

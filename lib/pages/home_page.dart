@@ -51,7 +51,7 @@ class HomePageState extends State<HomePage> {
       body: GestureDetector(
         onTap: phoneThrown,
         child: Container(
-          color: Colors.white,
+          color: Colors.grey,
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +86,9 @@ class HomePageState extends State<HomePage> {
     var stats = Provider.of<Stats>(context, listen: false);
     if (isDelayActive) return;
     isDelayActive = true;
-    Stopwatch().start();
+    resetVariables(stats);
+    Stopwatch stopwatch = Stopwatch();
+    stopwatch.start();
 
     while (!landed) {
       await Future.delayed(const Duration(milliseconds: 10));
@@ -102,16 +104,29 @@ class HomePageState extends State<HomePage> {
     }
     isDelayActive = true;
 
-    Stopwatch().stop();
-    double elapsedSeconds = Stopwatch().elapsedMilliseconds / 1000;
+    stopwatch.stop();
+    calculateFlips(stopwatch, stats);
+
+    setState(() {});
+    Vibration.vibrate(duration: 500 * stats.getTotalFlips() + 1);
+
+    Timer(const Duration(seconds: 2), () { isDelayActive = false; });
+  }
+
+  void calculateFlips(Stopwatch stopwatch, Stats stats) {
+    double elapsedSeconds = stopwatch.elapsedMilliseconds / 1000;
     stats.flipX = (radX * elapsedSeconds / (count * pi * 2)).round();
     stats.flipY = (radY * elapsedSeconds / (count * pi * 2)).round();
     stats.flipZ = (radZ * elapsedSeconds / (count * pi * 2)).round();
+  }
 
-    Vibration.vibrate(duration: 500 * stats.getTotalFlips());
-    setState(() {});
-
-    Timer(const Duration(seconds: 3), () { isDelayActive = false; });
+  void resetVariables(Stats stats) {
+    stats.resetFlips();
+    count = 0;
+    landed = false;
+    radX = 0;
+    radY = 0;
+    radZ = 0;
   }
 
   bool checkLanded(int count) {
