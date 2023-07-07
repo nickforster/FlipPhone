@@ -21,7 +21,7 @@ class HomePageState extends State<HomePage> {
   GyroscopeEvent? latestGyroscopeEvent;
   UserAccelerometerEvent? latestAccelerometerEvent;
   bool isDelayActive = false;
-  bool landed = false;
+  bool landed = true;
   int count = 0;
   double radX = 0;
   double radY = 0;
@@ -56,22 +56,37 @@ class HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Phone flips X: ${stats.getFlipX()}",
-                  style: const TextStyle(
-                    fontSize: 32,
-                  ),
+                Visibility(
+                  visible: landed == true,
+                  child: Column(
+                      children: [
+                    Text(
+                      "Phone flips X: ${stats.getFlipX()}",
+                      style: const TextStyle(
+                        fontSize: 32,
+                      ),
+                    ),
+                    Text(
+                      "Phone flips Y: ${stats.getFlipY()}",
+                      style: const TextStyle(
+                        fontSize: 32,
+                      ),
+                    ),
+                    Text(
+                      "Phone flips Z: ${stats.getFlipZ()}",
+                      style: const TextStyle(
+                        fontSize: 32,
+                      ),
+                    ),
+                  ]),
                 ),
-                Text(
-                  "Phone flips Y: ${stats.getFlipY()}",
-                  style: const TextStyle(
-                    fontSize: 32,
-                  ),
-                ),
-                Text(
-                  "Phone flips Z: ${stats.getFlipZ()}",
-                  style: const TextStyle(
-                    fontSize: 32,
+                Visibility(
+                  visible: landed == false,
+                  child: const Text(
+                    "Wee-eee",
+                    style: TextStyle(
+                      fontSize: 32,
+                    ),
                   ),
                 ),
               ],
@@ -101,6 +116,7 @@ class HomePageState extends State<HomePage> {
 
       landed = checkLanded(count);
       count++;
+      setState(() {});
     }
     isDelayActive = true;
 
@@ -110,7 +126,9 @@ class HomePageState extends State<HomePage> {
     setState(() {});
     Vibration.vibrate(duration: 500 * stats.getTotalFlips() + 1);
 
-    Timer(const Duration(seconds: 2), () { isDelayActive = false; });
+    Timer(const Duration(seconds: 2), () {
+      isDelayActive = false;
+    });
   }
 
   void calculateFlips(Stopwatch stopwatch, Stats stats) {
